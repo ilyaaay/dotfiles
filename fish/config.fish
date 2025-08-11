@@ -1,6 +1,10 @@
 if status is-interactive
-    # Commands to run in interactive sessions can go here
     fastfetch
+
+    alias hx=helix
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias rm='rm -i'
 end
 
 # get previous command
@@ -38,3 +42,7 @@ function yz
 end
 
 fnm env | source
+
+if test -z "$WAYLAND_DISPLAY"; and test "$XDG_VTNR" -eq 1
+    exec sway
+end
