@@ -46,3 +46,5 @@ fnm env | source
 if test -z "$WAYLAND_DISPLAY"; and test "$XDG_VTNR" -eq 1
     exec sway
 end
+
+set -gx EDITOR helix
