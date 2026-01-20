@@ -1,4 +1,6 @@
-theme = "pop-dark"
+# theme = "pop-dark"
+theme = "vim_dark_high_contrast"
+# theme = "ashen"
 
 [editor]
 color-modes = true
@@ -14,7 +16,7 @@ ret = ["move_line_down", "goto_first_nonwhitespace"]
 
 [editor.file-picker]
 hidden = true
-git-ignore = false
+git-ignore = true
 
 [editor.lsp]
 display-messages = true
