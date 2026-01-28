@@ -5,8 +5,9 @@
     // "width": 1280, // Waybar width
     // Choose the order of the modules
     "modules-left": ["sway/workspaces", "custom/spotify"],
-    "modules-center": ["sway/window"],
-    "modules-right": ["pulseaudio", "network", "cpu", "memory", "battery", "clock"],
+    // "modules-center": ["sway/window", "clock", "cpu", "memory"],
+    "modules-center": ["cpu", "memory", "battery"],
+    "modules-right": ["clock", "network", "pulseaudio"],
     // Modules configuration
     "sway/workspaces": {
         // "disable-scroll": true,
@@ -42,11 +43,11 @@
         "format": "{volume}% {icon}",
         "format-muted": "",
         "format-icons": ["", ""]
-    },
-    "custom/spotify": {
-        "format": " {}",
-        "max-length": 40,
-        "exec": "$HOME/.bin/mediaplayer.sh",
-        "exec-if": "pgrep spotify"
     }
+    // "custom/spotify": {
+    //     "format": " {}",
+    //     "max-length": 40,
+    //     "exec": "$HOME/.bin/mediaplayer.sh",
+    //     "exec-if": "pgrep spotify"
+    // }
 }
