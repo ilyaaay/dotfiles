@@ -1,7 +1,3 @@
-# theme = "pop-dark"
-theme = "vim_dark_high_contrast"
-# theme = "ashen"
-
 [editor]
 color-modes = true
 true-color = true
