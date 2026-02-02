@@ -183,6 +183,8 @@ bindsym $mod+r mode "resize"
 
 exec swayidle timeout 350 "swaylock -c 000000f0" before-sleep "swaylock -c 000000f0"
 exec redshift -m wayland -1 47.218262:-1.557180
+
 exec_always $HOME/.config/waybar/waybar.sh
+exec_always mako
 
 include $HOME/.config/sway/config.d/*
