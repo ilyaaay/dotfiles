@@ -10,6 +10,17 @@ esc = ["collapse_selection", "normal_mode"]
 esc = ["collapse_selection", ":w"]
 ret = ["move_line_down", "goto_first_nonwhitespace"]
 
+space.g.g = ":sh lazygit"
+space.g.b = ":sh git blame -L %{cursor_line},%{cursor_line} %{buffer_name}"
+space.g.d = ":sh git diff -- %{buffer_name}"
+
+space.t.t = ":sh cargo test"
+space.r.r = ":sh cargo run"
+space.c.c = ":sh cargo check"
+
+space.h.h = ":sh hurl %{buffer_name}"
+space.h.v = ":sh hurl --verbose %{buffer_name}"
+
 [editor.file-picker]
 hidden = true
 git-ignore = true
