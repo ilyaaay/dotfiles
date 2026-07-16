@@ -5,6 +5,15 @@ if status is-interactive
     alias lg=lazygit
 end
 
+function mkcd
+    if test (count $argv) -eq 0
+        echo "Usage: mkcd <directory>"
+        return 1
+    end
+
+    mkdir -p -- $argv[1]; and cd -- $argv[1]
+end
+
 function bind_bang
     switch (commandline -t)[-1]
         case "!"
