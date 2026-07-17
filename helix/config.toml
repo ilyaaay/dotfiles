@@ -1,3 +1,5 @@
+theme = "emacs"
+
 [editor]
 color-modes = true
 true-color = true

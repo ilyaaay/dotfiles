@@ -1,3 +1,10 @@
+[language-server.rust-analyzer.config]
+check.command = "clippy"
+checkOnSave = true
+
+[language-server.rust-analyzer.config.cargo]
+allFeatures = true
+
 [[language]]
 name = "typescript"
 auto-format = true
@@ -10,8 +17,6 @@ command = "typescript-language-server"
 name = "rust"
 language-servers = ["rust-analyzer"]
 
-[language-server.rust-analyzer.config]
-check.command = "clippy"
 
 [[grammar]]
 name = "sway"
