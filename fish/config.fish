@@ -1,8 +1,8 @@
 if status is-interactive
-    alias hx=helix
     alias ls='ls --color=auto'
     alias grep='grep --color=auto'
     alias lg=lazygit
+    alias chs='hunk diff'
 end
 
 function mkcd
