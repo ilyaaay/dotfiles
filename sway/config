@@ -186,6 +186,8 @@ bindsym $mod+r mode "resize"
     # Special key to take a screenshot with grim
     # bindsym Print exec grim
 
+# music player
+
 bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
@@ -207,4 +209,11 @@ exec_always mako
 
 include $HOME/.config/sway/config.d/*
 
+# exchange buffer with history
 
+exec wl-paste --watch cliphist store
+
+bindsym $mod+Shift+v exec cliphist list | wofi --dmenu | cliphist decode | wl-copy
+
+# switch between current and last workspaces
+bindsym $mod+Tab workspace back_and_forth
