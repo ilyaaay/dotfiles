@@ -17,7 +17,6 @@ set $menu fuzzel
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
 # hide_edge_borders smart
 
@@ -45,6 +44,9 @@ floating_modifier $mod normal
 bindsym $mod+Shift+c reload
 
 bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+bindsym $mod+Escape exec ~/.config/bin/lockscreen.sh
+
 #
 # Moving around:
 #
@@ -193,3 +195,5 @@ exec_always $HOME/.config/waybar/waybar.sh
 exec_always mako
 
 include $HOME/.config/sway/config.d/*
+
+
