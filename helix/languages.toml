@@ -5,6 +5,16 @@ checkOnSave = true
 [language-server.rust-analyzer.config.cargo]
 allFeatures = true
 
+[language-server.biome]
+command = "biome"
+args = ["lsp-proxy"]
+
+[[language]]
+name = "typescript"
+roots = ["biome.json", "biome.jsonc", "package.json"]
+language-servers = [ { name = "typescript-language-server", except-features = [ "format" ] }, "biome" ]
+auto-format = true
+
 [[language]]
 name = "typescript"
 auto-format = true
