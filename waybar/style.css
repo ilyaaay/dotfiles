@@ -64,12 +64,13 @@ window {
 }
 
 #cpu {
-    background: #2ecc71;
+    background: #a6e3a1;
     color: #000000;
 }
 
 #memory {
-    background: #9b59b6;
+    background: #a6e3a1;
+    color: #000000;
 }
 
 #network {
@@ -81,7 +82,7 @@ window {
 }
 
 #pulseaudio {
-    background: #f1c40f;
+    background: #a6e3a1;
     color: black;
 }
 
