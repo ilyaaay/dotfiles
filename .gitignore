@@ -16,3 +16,6 @@ config/opencode/service.json
 config/hunk/
 config/cagent/
 config/zed/
+
+**/.gitconfig-home
+**/.gitconfig-work
