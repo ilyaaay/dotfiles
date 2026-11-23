@@ -1,0 +1,209 @@
+#!/usr/bin/env bash
+#
+# Link this dotfiles repository into $HOME.
+#
+#   dotfiles status          show what is linked, what drifted
+#   dotfiles list            print every managed entry and its destination
+#   dotfiles link            dry-run the linking plan
+#   dotfiles link -y         apply it (existing files are moved to a backup)
+#   dotfiles unlink          remove symlinks that point into this repository
+#
+# Flags:
+#   -n, --dry-run   never touch the filesystem
+#   -y, --yes       actually apply changes
+#       --host X    darwin | linux (default: detected from uname)
+#
+# Symlinks are absolute. Anything that already exists at a destination is
+# moved to $HOME/.dotfiles-backup/<timestamp>/ (same relative path), never
+# deleted.
+
+set -euo pipefail
+
+REPO=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+MANIFESTS="$REPO/manifests"
+
+CMD=status
+HOST=""
+DRY_RUN=0
+ASSUME_YES=0
+
+detect_host() {
+  case "$(uname -s)" in
+    Darwin) echo darwin ;;
+    Linux) echo linux ;;
+    *) echo unknown ;;
+  esac
+}
+
+usage() {
+  sed -n '2,20p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    status|list|link|unlink) CMD="$1" ;;
+    -n|--dry-run) DRY_RUN=1 ;;
+    -y|--yes) ASSUME_YES=1 ;;
+    --host) HOST="${2:-}"; shift ;;
+    --host=*) HOST="${1#*=}" ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "unknown argument: $1" >&2; usage >&2; exit 2 ;;
+  esac
+  shift
+done
+
+[ -n "$HOST" ] || HOST=$(detect_host)
+[ "$HOST" = "unknown" ] && { echo "unsupported platform, pass --host" >&2; exit 2; }
+
+BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+
+# Entries: base first, then host-specific (overrides win because they are
+# applied later and point at the same destination).
+entries() {
+  local f
+  for f in "$MANIFESTS/base.list" "$MANIFESTS/$HOST.list"; do
+    [ -f "$f" ] || continue
+    grep -Ev '^[[:space:]]*(#|$)' "$f" || true
+  done
+}
+
+dest_for() {
+  case "$1" in
+    overrides/*/config/*) printf '%s/.config/%s\n' "$HOME" "${1#overrides/*/config/}" ;;
+    config/*) printf '%s/.config/%s\n' "$HOME" "${1#config/}" ;;
+    home/*) printf '%s/%s\n' "$HOME" "${1#home/}" ;;
+    *) return 1 ;;
+  esac
+}
+
+say() { printf '%s\n' "$*"; }
+
+plan_link() {
+  local entry dest src cur backup
+  while IFS= read -r entry; do
+    dest=$(dest_for "$entry") || { say "skip  $entry (no destination rule)"; continue; }
+    src="$REPO/$entry"
+    if [ ! -e "$src" ] && [ ! -L "$src" ]; then
+      say "skip  $entry (missing in repo)"
+      continue
+    fi
+    if [ -L "$dest" ]; then
+      cur=$(readlink "$dest")
+      if [ "$cur" = "$src" ]; then
+        say "ok    $dest"
+      else
+        say "swap  $dest -> $src"
+        say "        was: $cur"
+      fi
+    elif [ -e "$dest" ]; then
+      backup="$BACKUP/${dest#"$HOME"/}"
+      say "backup $dest -> $backup"
+      say "link   $dest -> $src"
+    else
+      say "link   $dest -> $src"
+    fi
+  done < <(entries)
+}
+
+do_link() {
+  local entry dest src cur backup
+  while IFS= read -r entry; do
+    dest=$(dest_for "$entry") || continue
+    src="$REPO/$entry"
+    [ -e "$src" ] || { say "skip  $entry (missing in repo)"; continue; }
+
+    if [ -L "$dest" ]; then
+      cur=$(readlink "$dest")
+      [ "$cur" = "$src" ] && continue
+      [ $DRY_RUN -eq 1 ] && continue
+      rm -f -- "$dest"
+    elif [ -e "$dest" ]; then
+      backup="$BACKUP/${dest#"$HOME"/}"
+      [ $DRY_RUN -eq 1 ] && continue
+      mkdir -p -- "$(dirname -- "$backup")"
+      mv -- "$dest" "$backup"
+    fi
+
+    [ $DRY_RUN -eq 1 ] && continue
+    mkdir -p -- "$(dirname -- "$dest")"
+    ln -s -- "$src" "$dest"
+  done < <(entries)
+
+  if [ $DRY_RUN -eq 1 ]; then
+    say ""
+    say "preview only, nothing changed. Re-run with -y to apply."
+  else
+    say ""
+    say "done. backups (if any): $BACKUP"
+  fi
+}
+
+do_unlink() {
+  local entry dest src cur
+  while IFS= read -r entry; do
+    dest=$(dest_for "$entry") || continue
+    src="$REPO/$entry"
+    [ -L "$dest" ] || continue
+    cur=$(readlink "$dest")
+    if [ "$cur" = "$src" ]; then
+      if [ $DRY_RUN -eq 1 ]; then
+        say "would unlink $dest"
+      else
+        rm -f -- "$dest"
+        say "unlinked $dest"
+      fi
+    else
+      say "skip  $dest (points elsewhere: $cur)"
+    fi
+  done < <(entries)
+  [ $DRY_RUN -eq 1 ] && say "" && say "preview only, nothing changed. Re-run with -y to apply."
+}
+
+do_status() {
+  local entry dest src cur rc=0
+  while IFS= read -r entry; do
+    dest=$(dest_for "$entry") || { say "skip  $entry"; continue; }
+    src="$REPO/$entry"
+    if [ -L "$dest" ]; then
+      cur=$(readlink "$dest")
+      if [ "$cur" = "$src" ]; then
+        say "ok    $dest"
+      else
+        say "wrong $dest -> $cur (want $src)"; rc=1
+      fi
+    elif [ -e "$dest" ]; then
+      say "file  $dest is a real file, not linked"; rc=1
+    else
+      say "none  $dest missing"; rc=1
+    fi
+  done < <(entries)
+  return $rc
+}
+
+do_list() {
+  local entry dest
+  while IFS= read -r entry; do
+    dest=$(dest_for "$entry") || dest="?"
+    printf '%-60s %s\n' "$entry" "$dest"
+  done < <(entries)
+}
+
+case "$CMD" in
+  link)
+    if [ $ASSUME_YES -eq 0 ]; then DRY_RUN=1; fi
+    say "host: $HOST"
+    if [ $DRY_RUN -eq 1 ] && [ $ASSUME_YES -eq 0 ]; then plan_link; else do_link; fi
+    ;;
+  unlink)
+    if [ $ASSUME_YES -eq 0 ]; then DRY_RUN=1; fi
+    do_unlink
+    ;;
+  status)
+    say "host: $HOST"
+    do_status
+    ;;
+  list)
+    say "host: $HOST"
+    do_list
+    ;;
+esac

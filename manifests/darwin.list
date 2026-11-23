@@ -1,0 +1,8 @@
+# macOS-only entries.
+#
+# macOS currently needs no diverging versions of the shared files:
+# everything host-specific lives in config/fish/conf.d/local.fish
+# or in files excluded from this repository (opencode, zed, nvim).
+#
+# If a file really must differ between macOS and Linux, put the macOS
+# variant in overrides/darwin/config/<path> and list it here.

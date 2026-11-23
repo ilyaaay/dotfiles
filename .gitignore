@@ -1,23 +1,18 @@
-Mattermost
-go
-pulse
-QtProject.conf
-dconf
-Thunar
-hunk
-libreoffice
-mozilla
-opencode
-reeve
-xarchiverrc
-zen
-mimeapps.list
-pavucontrol.ini
-com.dbx.app
-abtop
-autostart
 .DS_Store
 
-*/history
-*/log
-*/private.fish
+# Machine-local files: never linked, never committed.
+# Anything host-specific belongs in ~/.config/fish/conf.d/local.fish
+# or in ~/.config/fish/fish_variables.
+config/fish/fish_variables
+config/fish/conf.d/local.fish
+config/pgcli/history
+config/pgcli/log
+config/helix/cat
+
+# Application data / secrets that this repo does not manage.
+config/opencode/node_modules/
+config/opencode/cli.json
+config/opencode/service.json
+config/hunk/
+config/cagent/
+config/zed/

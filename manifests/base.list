@@ -1,0 +1,33 @@
+# Managed on every host.
+#
+# One path per line, relative to the repository root.
+# Destination is derived from the prefix:
+#   config/<path>            -> ~/.config/<path>
+#   home/<path>              -> ~/<path>
+#   overrides/<host>/config/ -> ~/.config/...   (host-only overrides)
+#
+# A directory entry links the whole directory; a file entry links one file.
+# Prefer file entries for directories where apps write their own stuff
+# (histories, caches, databases).
+
+# ~/.config
+config/alacritty/alacritty.toml
+config/btop/btop.conf
+config/fish/config.fish
+config/fish/conf.d/rustup.fish
+config/fontconfig/fonts.conf
+config/ghostty/config
+config/git/config
+config/helix/config.toml
+config/helix/languages.toml
+config/lazydocker/config.yml
+config/lazygit/config.yml
+config/opencode/opencode.jsonc
+config/pgcli/config
+config/tmux/tmux.conf
+config/yazi/yazi.toml
+
+# ~
+home/.gitconfig
+home/.gitconfig-home
+home/.gitconfig-work

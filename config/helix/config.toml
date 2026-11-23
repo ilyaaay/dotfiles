@@ -1,4 +1,4 @@
-theme = "emacs"
+theme="vim_dark_high_contrast"
 
 [editor]
 color-modes = true
@@ -32,13 +32,13 @@ d = ":sh git diff -- %{buffer_name}"
 # cargo
 [keys.normal.space.c]
 t = ":sh cargo test"
-r = ":sh cargo run"
-c = ":sh cargo check"
+r = ":sh cargo run" 
+c = ":sh cargo check"  
 
 # hurl
 [keys.normal.space.h]
 h = ":sh hurl %{buffer_name}"
-v = ":sh hurl --verbose %{buffer_name}"
+v = ":sh hurl --verbose %{buffer_name}" 
 
 # buf path
 [keys.normal.space.B]

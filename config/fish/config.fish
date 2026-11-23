@@ -1,8 +1,12 @@
 if status is-interactive
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
     alias lg=lazygit
     alias hunk='hunk diff --watch'
+
+    # GNU ls/grep colors only make sense on Linux; macOS ships BSD tools.
+    if test (uname) != Darwin
+        alias ls='ls --color=auto'
+        alias grep='grep --color=auto'
+    end
 end
 
 function mkcd
@@ -47,22 +51,14 @@ function yz
     rm -f -- "$tmp"
 end
 
-fnm env | source
-
-if test -z "$WAYLAND_DISPLAY"; and test "$XDG_VTNR" -eq 1
-    exec sway
+# fnm sets PATH itself, so no generated export block is committed here.
+if type -q fnm
+    fnm env | source
 end
 
-set -gx EDITOR helix
+set -gx EDITOR hx
 set -gx BROWSER zen
 
-# fnm
-set -gx PATH "/Users/ilyaaa/.local/state/fnm_multishells/39823_1793828244270/bin" $PATH
-set -gx FNM_MULTISHELL_PATH "/Users/ilyaaa/.local/state/fnm_multishells/39823_1793828244270"
-set -gx FNM_VERSION_FILE_STRATEGY local
-set -gx FNM_DIR "/Users/ilyaaa/.local/share/fnm"
-set -gx FNM_LOGLEVEL info
-set -gx FNM_NODE_DIST_MIRROR "https://nodejs.org/dist"
-set -gx FNM_COREPACK_ENABLED false
-set -gx FNM_RESOLVE_ENGINES true
-set -gx FNM_ARCH arm64
+# Machine-private settings (paths, tokens, work-only env) go here.
+# The file is gitignored and never linked, edit it in place:
+#   ~/.config/fish/conf.d/local.fish

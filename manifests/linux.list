@@ -1,0 +1,21 @@
+# Linux-only entries (Hyprland/omarchy desktop stack).
+
+# Wayland desktop
+config/hypr
+config/waybar
+config/sway
+config/mako/config
+
+# desktop utilities
+overrides/linux/config/alacritty/alacritty.toml
+config/autostart/electron.desktop
+config/bottom/bottom.toml
+config/glow/glow.yml
+config/htop/htoprc
+config/pacseek/config.json
+config/redshift/redshift.conf
+config/swappy/config
+config/systemd/user/graphical-session.target.wants/mako.service
+
+# shell bits that only exist on Linux (sway autostart from TTY)
+overrides/linux/config/fish/conf.d/linux.fish
