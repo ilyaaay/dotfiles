@@ -2,7 +2,7 @@ if status is-interactive
     alias ls='ls --color=auto'
     alias grep='grep --color=auto'
     alias lg=lazygit
-    alias chs='hunk diff'
+    alias hunk='hunk diff --watch'
 end
 
 function mkcd
@@ -54,3 +54,15 @@ if test -z "$WAYLAND_DISPLAY"; and test "$XDG_VTNR" -eq 1
 end
 
 set -gx EDITOR helix
+set -gx BROWSER zen
+
+# fnm
+set -gx PATH "/Users/ilyaaa/.local/state/fnm_multishells/39823_1793828244270/bin" $PATH
+set -gx FNM_MULTISHELL_PATH "/Users/ilyaaa/.local/state/fnm_multishells/39823_1793828244270"
+set -gx FNM_VERSION_FILE_STRATEGY local
+set -gx FNM_DIR "/Users/ilyaaa/.local/share/fnm"
+set -gx FNM_LOGLEVEL info
+set -gx FNM_NODE_DIST_MIRROR "https://nodejs.org/dist"
+set -gx FNM_COREPACK_ENABLED false
+set -gx FNM_RESOLVE_ENGINES true
+set -gx FNM_ARCH arm64
